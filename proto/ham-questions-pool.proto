@@ -10,6 +10,8 @@ message Question {
     string stem = 4;
     string key = 5;
     repeated string distractors = 6;   
+
+    string figure = 7;
 }
 
 message QuestionPool {
