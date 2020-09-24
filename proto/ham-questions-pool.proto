@@ -3,17 +3,26 @@ syntax = "proto3";
 package proto;
 
 message Question {
-    string sublement = 1;
-    int32 sequence = 2;
-    string chapter = 3;
+    string Sublement = 1;
+    int32 Sequence = 2;
+    string Chapter = 3;
 
-    string stem = 4;
-    string key = 5;
-    repeated string distractors = 6;   
+    string Stem = 4;
+    string Key = 5;
+    repeated string Distractors = 6;   
 
-    string figure = 7;
+    string Figure = 7;
 }
 
-message QuestionPool {
-    repeated Question question = 1;
+message QuestionList {
+    repeated Question Question = 1;
+}
+
+message CompleteQuestionPool {
+    repeated Sublement Subl = 1;
+}
+
+message Sublement {
+    string SublementId = 1;
+    repeated Question Qlist = 2;
 }

@@ -10,6 +10,15 @@ import (
 
 const generalFigG7_1 = "2019-2023_general-G7-1.png"
 
+// parse a single question
+//
+// G0A01 (A)
+// What is one way that RF energy can affect human body tissue?
+// A. It heats body tissue
+// B. It causes radiation poisoning
+// C. It causes the blood count to reach a dangerously low level
+// D. It cools body tissue
+// ~~
 func qparse(q string) *proto.Question {
 
 	lines := strings.Split(q, "\n")

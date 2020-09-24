@@ -42,25 +42,37 @@ func main() {
 	fmt.Printf("Generated output to: %s\n", outputDir)
 }
 
-func createPool(sourcePool string) *proto.QuestionPool {
-	splitted := strings.Split(sourcePool, "\n")
-
-	qpool := &proto.QuestionPool{}
+func createPool(sourcePool string) *proto.CompleteQuestionPool {
+	lines := strings.Split(sourcePool, "\n")
+	qpool := &proto.CompleteQuestionPool{}
 
 	startr, _ := regexp.Compile("G[0-9][A-Z][0-9][0-9]\\s\\([A-D]\\)")
 	endr, _ := regexp.Compile("~~")
-
+	sublr, _ := regexp.Compile("SUBELEMENT G.*")
 	inQ := false
 
-	question := ""
-	for _, s := range splitted {
+	var subl *proto.Sublement
+	var question string
+
+	for _, s := range lines {
+		if s == "" {
+			continue
+		}
 
 		matchStart := startr.MatchString(s)
 		matchEnd := endr.MatchString(s)
+		matchSub := sublr.MatchString(s)
 
 		if inQ == true {
 			question += s
 			question += "\n"
+		} else {
+			subl = &proto.Sublement{}
+			if matchSub {
+				subl.SublementId = s
+			}
+
+			qpool.Subl = append(qpool.Subl, subl)
 		}
 
 		if matchStart {
@@ -69,7 +81,7 @@ func createPool(sourcePool string) *proto.QuestionPool {
 			question += "\n"
 		} else if matchEnd {
 			inQ = false
-			qpool.Question = append(qpool.Question, qparse(question))
+			subl.Qlist = append(subl.Qlist, qparse(question))
 			question = ""
 		}
 	}
