@@ -3,27 +3,25 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"regexp"
-	"strings"
 
-	"github.com/lulumel0n/arrl-ham-questions-pool-proto/proto"
+	hamquestions "github.com/lulumel0n/arrl-ham-questions-pool-proto/ham-questions"
 	pbtext "google.golang.org/protobuf/encoding/prototext"
 	pb "google.golang.org/protobuf/proto"
 )
 
 const outputDir = "../out/"
 const generalText = "2019-2023_general"
+const rawQuestionsTxt = "../raw-questions/2019-2023_general.txt"
 
 func main() {
 
-	data, err := ioutil.ReadFile("../raw-questions/2019-2023_general.txt")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	qp := createPool(string(data))
+	qpb, err := hamquestions.NewHamQuestion("", rawQuestionsTxt)
 
-	out, err := pb.Marshal(qp)
+	if err != nil {
+		panic(err)
+	}
+
+	out, err := pb.Marshal(qpb.Pool)
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +29,7 @@ func main() {
 		panic(err)
 	}
 
-	msout, err := pbtext.MarshalOptions{}.Marshal(qp)
+	msout, err := pbtext.MarshalOptions{}.Marshal(qpb.Pool)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -40,51 +38,4 @@ func main() {
 	}
 
 	fmt.Printf("Generated output to: %s\n", outputDir)
-}
-
-func createPool(sourcePool string) *proto.CompleteQuestionPool {
-	lines := strings.Split(sourcePool, "\n")
-	qpool := &proto.CompleteQuestionPool{}
-
-	startr, _ := regexp.Compile("G[0-9][A-Z][0-9][0-9]\\s\\([A-D]\\)")
-	endr, _ := regexp.Compile("~~")
-	sublr, _ := regexp.Compile("SUBELEMENT G.*")
-	inQ := false
-
-	var subl *proto.Sublement
-	var question string
-
-	for _, s := range lines {
-		if s == "" {
-			continue
-		}
-
-		matchStart := startr.MatchString(s)
-		matchEnd := endr.MatchString(s)
-		matchSub := sublr.MatchString(s)
-
-		if inQ == true {
-			question += s
-			question += "\n"
-		} else {
-			subl = &proto.Sublement{}
-			if matchSub {
-				subl.SublementId = s
-			}
-
-			qpool.Subl = append(qpool.Subl, subl)
-		}
-
-		if matchStart {
-			inQ = true
-			question += s
-			question += "\n"
-		} else if matchEnd {
-			inQ = false
-			subl.Qlist = append(subl.Qlist, qparse(question))
-			question = ""
-		}
-	}
-
-	return qpool
 }
