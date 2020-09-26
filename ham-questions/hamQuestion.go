@@ -80,10 +80,17 @@ func CreatePool(sourcePool string) *proto.CompleteQuestionPool {
 			question += "\n"
 		} else if matchEnd {
 			inQ = false
-			subl.Qlist = append(subl.Qlist, qparse(question))
+			q := qparse(question)
+
+			if subl.GroupMap == nil {
+				subl.GroupMap = make(map[string]*proto.QuestionList)
+			}
+			if subl.GroupMap[q.GetSection()] == nil {
+				subl.GroupMap[q.GetSection()] = &proto.QuestionList{}
+			}
+			subl.GroupMap[q.GetSection()].Questions = append(subl.GroupMap[q.GetSection()].Questions, q)
 			question = ""
 		}
 	}
-
 	return qpool
 }

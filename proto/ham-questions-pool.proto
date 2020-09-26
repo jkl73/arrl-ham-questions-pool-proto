@@ -3,26 +3,26 @@ syntax = "proto3";
 package proto;
 
 message Question {
-    string Sublement = 1;
-    int32 Sequence = 2;
-    string Chapter = 3;
+    string Sublement = 1; // G0, G1 ,G2
+    string Section = 2; // A, B, C
+    int32 Sequence = 3; // 
+    string Chapter = 4;
+    string Stem = 5;
+    string Key = 6;
+    repeated string Distractors = 7;
 
-    string Stem = 4;
-    string Key = 5;
-    repeated string Distractors = 6;   
-
-    string Figure = 7;
+    string Figure = 8;
 }
 
 message QuestionList {
-    repeated Question Question = 1;
+    repeated Question Questions = 1;
 }
 
 message CompleteQuestionPool {
-    repeated Sublement Subl = 1;
+    repeated Sublement Subl = 1; // G1 - G0
 }
 
 message Sublement {
     string SublementId = 1;
-    repeated Question Qlist = 2;
+    map<string, QuestionList> GroupMap = 2; // A, B, C...
 }

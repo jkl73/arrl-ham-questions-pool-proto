@@ -24,7 +24,8 @@ func qparse(q string) *proto.Question {
 	lines := strings.Split(q, "\n")
 
 	// title
-	sblmnt := lines[0][0:3]
+	sblmnt := lines[0][0:2]
+	section := string(lines[0][2])
 	seqnum, err := strconv.Atoi(lines[0][3:5])
 	if err != nil {
 		panic(err)
@@ -86,6 +87,7 @@ func qparse(q string) *proto.Question {
 
 	res := proto.Question{
 		Sublement:   sblmnt,
+		Section:     section,
 		Sequence:    seqnumber,
 		Chapter:     chapter,
 		Stem:        stem,
