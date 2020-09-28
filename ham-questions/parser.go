@@ -50,7 +50,6 @@ func qparse(q string) *proto.Question {
 			stem += " "
 		}
 	}
-
 	stem = strings.TrimSpace(stem)
 
 	// figure handle (only 1 figure in the General exam)
@@ -74,8 +73,11 @@ func qparse(q string) *proto.Question {
 				break
 			} else {
 				ans += lines[i]
+				ans += " "
 			}
 		}
+		ans = strings.TrimSpace(ans)
+
 		if string(ans[0]) == keyChoice {
 			key = ans[3:]
 
