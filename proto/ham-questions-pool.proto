@@ -2,10 +2,12 @@ syntax = "proto3";
 
 package proto;
 
+option go_package = "github.com/lulumel0n/arrl-ham-questions-pool-proto/proto";
+
 message Question {
     string Sublement = 1; // G0, G1 ,G2
-    string Section = 2; // A, B, C
-    int32 Sequence = 3; // 
+    string Group = 2; // A, B, C
+    int32 Sequence = 3; // 01, 02
     string Chapter = 4;
     string Stem = 5;
     string Key = 6;
@@ -19,10 +21,36 @@ message QuestionList {
 }
 
 message CompleteQuestionPool {
-    repeated Sublement Subl = 1; // G1 - G0
+    map<string, Subelement> SubelementMap = 1;
 }
 
-message Sublement {
-    string SublementId = 1;
-    map<string, QuestionList> GroupMap = 2; // A, B, C...
+message Group {
+    string Id = 1; // A B C D
+    string Title = 2;
+
+    repeated Question Questions = 3; // 01 02 03
+}
+
+message Subelement {
+    string Id = 1; // G1 - G0
+    string Title = 2;
+
+    map<string, Group> GroupMap = 3; // A, B, C...
+}
+
+// just titles
+message AllTitles {
+    repeated SubelementTitle Subelements = 1;
+}
+
+message SubelementTitle {
+    string id = 1;
+    string Title = 2;
+
+    repeated GroupTitle Groups = 3;
+}
+
+message GroupTitle {
+    string id = 1;
+    string Title = 2;
 }

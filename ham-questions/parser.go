@@ -89,7 +89,7 @@ func qparse(q string) *proto.Question {
 
 	res := proto.Question{
 		Sublement:   sblmnt,
-		Section:     section,
+		Group:       section,
 		Sequence:    seqnumber,
 		Chapter:     chapter,
 		Stem:        stem,

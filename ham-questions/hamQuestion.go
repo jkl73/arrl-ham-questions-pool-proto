@@ -11,14 +11,10 @@ import (
 	"github.com/lulumel0n/arrl-ham-questions-pool-proto/proto"
 )
 
-// HamQuestion contains the complete question set
-type HamQuestion struct {
-	Pool *proto.CompleteQuestionPool
-}
-
-// NewHamQuestion returns a struct with all questions in proto
-func NewHamQuestion(cached string, rawQuestions string) (*HamQuestion, error) {
+// NewHamQuestionsAndTitles returns a struct with all questions in one proto and the titles in another
+func NewHamQuestionsAndTitles(cached string, rawQuestions string) (*proto.CompleteQuestionPool, *proto.AllTitles, error) {
 	qpb := &proto.CompleteQuestionPool{}
+	titles := &proto.AllTitles{}
 
 	// load from cache
 	cachedpb, err := ioutil.ReadFile(cached)
@@ -27,32 +23,39 @@ func NewHamQuestion(cached string, rawQuestions string) (*HamQuestion, error) {
 		data, err := ioutil.ReadFile(rawQuestions)
 		if err != nil {
 			fmt.Println(err)
-			return nil, err
+			return nil, nil, err
 		}
-		qpb = CreatePool(string(data))
+		qpb, titles = CreatePool(string(data))
 	} else {
 		if err = pb.Unmarshal(cachedpb, qpb); err != nil {
 			fmt.Println("Fail to unmarshal cached proto")
-			return nil, err
+			return nil, nil, err
 		}
 	}
 
-	res := &HamQuestion{qpb}
-	return res, nil
+	return qpb, titles, nil
 }
 
-// CreatePool creates a Ham quesitons pool from a formated txt questions pool
-func CreatePool(sourcePool string) *proto.CompleteQuestionPool {
+// CreatePool creates a Ham quesitons pool from a formated txt questions pool, and a titles only proto
+func CreatePool(sourcePool string) (*proto.CompleteQuestionPool, *proto.AllTitles) {
 	lines := strings.Split(sourcePool, "\n")
 	qpool := &proto.CompleteQuestionPool{}
+	qpool.SubelementMap = make(map[string]*proto.Subelement)
+
+	alltitles := &proto.AllTitles{}
 
 	startr, _ := regexp.Compile("G[0-9][A-Z][0-9][0-9]\\s\\([A-D]\\)")
 	endr, _ := regexp.Compile("~~")
-	sublr, _ := regexp.Compile("SUBELEMENT G.*")
+	subelementr, _ := regexp.Compile("SUBELEMENT G.*")
+	groupr, _ := regexp.Compile("G[0-9][A-Z] –.*")
 	inQ := false
 
-	var subl *proto.Sublement
+	var subelement *proto.Subelement
+	var group *proto.Group
 	var question string
+
+	var subelementTitle *proto.SubelementTitle
+	var groupTitle *proto.GroupTitle
 
 	for _, s := range lines {
 		if s == "" {
@@ -61,16 +64,37 @@ func CreatePool(sourcePool string) *proto.CompleteQuestionPool {
 
 		matchStart := startr.MatchString(s)
 		matchEnd := endr.MatchString(s)
-		matchSub := sublr.MatchString(s)
+		matchSubelement := subelementr.MatchString(s)
+		matchGroup := groupr.MatchString(s)
 
 		if inQ == true {
 			question += s
 			question += "\n"
 		} else {
-			if matchSub {
-				subl = &proto.Sublement{}
-				subl.SublementId = s
-				qpool.Subl = append(qpool.Subl, subl)
+			if matchSubelement {
+				subelement = &proto.Subelement{}
+				subelement.Id = s[11:13]
+				subelement.Title = s[18 : len(s)-32]
+				subelement.GroupMap = make(map[string]*proto.Group)
+
+				subelementTitle = &proto.SubelementTitle{}
+				subelementTitle.Id = s[11:13]
+				subelementTitle.Title = subelement.Title
+				alltitles.Subelements = append(alltitles.Subelements, subelementTitle)
+
+				qpool.SubelementMap[subelement.Id] = subelement
+			} else if matchGroup {
+				group = &proto.Group{}
+				group.Id = string(s[2])
+				group.Title = s[8:]
+
+				subelement.GroupMap[group.Id] = group
+
+				groupTitle = &proto.GroupTitle{}
+				groupTitle.Id = group.Id
+				groupTitle.Title = group.Title
+
+				subelementTitle.Groups = append(subelementTitle.Groups, groupTitle)
 			}
 		}
 
@@ -79,18 +103,17 @@ func CreatePool(sourcePool string) *proto.CompleteQuestionPool {
 			question += s
 			question += "\n"
 		} else if matchEnd {
-			inQ = false
 			q := qparse(question)
 
-			if subl.GroupMap == nil {
-				subl.GroupMap = make(map[string]*proto.QuestionList)
+			if subelement.GroupMap == nil {
+				subelement.GroupMap = make(map[string]*proto.Group)
 			}
-			if subl.GroupMap[q.GetSection()] == nil {
-				subl.GroupMap[q.GetSection()] = &proto.QuestionList{}
-			}
-			subl.GroupMap[q.GetSection()].Questions = append(subl.GroupMap[q.GetSection()].Questions, q)
+			group.Questions = append(group.Questions, q)
+
+			// flush question buffer
 			question = ""
+			inQ = false
 		}
 	}
-	return qpool
+	return qpool, alltitles
 }
