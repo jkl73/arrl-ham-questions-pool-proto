@@ -5,7 +5,7 @@ package proto;
 option go_package = "github.com/lulumel0n/arrl-ham-questions-pool-proto/proto";
 
 message Question {
-    string Sublement = 1; // G0, G1 ,G2
+    string Subelement = 1; // G0, G1 ,G2
     string Group = 2; // A, B, C
     int32 Sequence = 3; // 01, 02
     string Chapter = 4;

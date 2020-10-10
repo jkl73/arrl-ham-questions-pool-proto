@@ -88,7 +88,7 @@ func qparse(q string) *proto.Question {
 	}
 
 	res := proto.Question{
-		Sublement:   sblmnt,
+		Subelement:  sblmnt,
 		Group:       section,
 		Sequence:    seqnumber,
 		Chapter:     chapter,
