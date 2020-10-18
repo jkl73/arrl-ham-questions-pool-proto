@@ -54,3 +54,32 @@ message GroupTitle {
     string id = 1;
     string Title = 2;
 }
+
+// stat to be recorded
+message PersonalStat {
+    map<string, SingleQuestionStat> StatsMap = 1;
+}
+
+message SingleQuestionStat {
+    int32 correct = 1;
+    int32 unknown = 2;
+    int32 wrong = 3;
+}
+
+// stat to be sent
+message StatMsg {
+    string Subelement = 1;
+    string Group = 2;
+    int32 Sequence = 3;
+    StatsVerdict Verdict = 4;
+}
+
+enum StatsVerdict {
+    STAT_CORRECT = 0;
+    STAT_UNKNOWN = 1;
+    STAT_WRONG = 2;
+}
+
+message StatMsgs {
+    repeated StatMsg Msgs = 1;
+}

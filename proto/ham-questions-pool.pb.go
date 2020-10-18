@@ -25,6 +25,55 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+type StatsVerdict int32
+
+const (
+	StatsVerdict_STAT_CORRECT StatsVerdict = 0
+	StatsVerdict_STAT_UNKNOWN StatsVerdict = 1
+	StatsVerdict_STAT_WRONG   StatsVerdict = 2
+)
+
+// Enum value maps for StatsVerdict.
+var (
+	StatsVerdict_name = map[int32]string{
+		0: "STAT_CORRECT",
+		1: "STAT_UNKNOWN",
+		2: "STAT_WRONG",
+	}
+	StatsVerdict_value = map[string]int32{
+		"STAT_CORRECT": 0,
+		"STAT_UNKNOWN": 1,
+		"STAT_WRONG":   2,
+	}
+)
+
+func (x StatsVerdict) Enum() *StatsVerdict {
+	p := new(StatsVerdict)
+	*p = x
+	return p
+}
+
+func (x StatsVerdict) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (StatsVerdict) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_ham_questions_pool_proto_enumTypes[0].Descriptor()
+}
+
+func (StatsVerdict) Type() protoreflect.EnumType {
+	return &file_proto_ham_questions_pool_proto_enumTypes[0]
+}
+
+func (x StatsVerdict) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use StatsVerdict.Descriptor instead.
+func (StatsVerdict) EnumDescriptor() ([]byte, []int) {
+	return file_proto_ham_questions_pool_proto_rawDescGZIP(), []int{0}
+}
+
 type Question struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -514,6 +563,236 @@ func (x *GroupTitle) GetTitle() string {
 	return ""
 }
 
+// stat to be recorded
+type PersonalStat struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	StatsMap map[string]*SingleQuestionStat `protobuf:"bytes,1,rep,name=StatsMap,proto3" json:"StatsMap,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *PersonalStat) Reset() {
+	*x = PersonalStat{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_ham_questions_pool_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PersonalStat) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PersonalStat) ProtoMessage() {}
+
+func (x *PersonalStat) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_ham_questions_pool_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PersonalStat.ProtoReflect.Descriptor instead.
+func (*PersonalStat) Descriptor() ([]byte, []int) {
+	return file_proto_ham_questions_pool_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *PersonalStat) GetStatsMap() map[string]*SingleQuestionStat {
+	if x != nil {
+		return x.StatsMap
+	}
+	return nil
+}
+
+type SingleQuestionStat struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Correct int32 `protobuf:"varint,1,opt,name=correct,proto3" json:"correct,omitempty"`
+	Unknown int32 `protobuf:"varint,2,opt,name=unknown,proto3" json:"unknown,omitempty"`
+	Wrong   int32 `protobuf:"varint,3,opt,name=wrong,proto3" json:"wrong,omitempty"`
+}
+
+func (x *SingleQuestionStat) Reset() {
+	*x = SingleQuestionStat{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_ham_questions_pool_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SingleQuestionStat) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SingleQuestionStat) ProtoMessage() {}
+
+func (x *SingleQuestionStat) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_ham_questions_pool_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SingleQuestionStat.ProtoReflect.Descriptor instead.
+func (*SingleQuestionStat) Descriptor() ([]byte, []int) {
+	return file_proto_ham_questions_pool_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SingleQuestionStat) GetCorrect() int32 {
+	if x != nil {
+		return x.Correct
+	}
+	return 0
+}
+
+func (x *SingleQuestionStat) GetUnknown() int32 {
+	if x != nil {
+		return x.Unknown
+	}
+	return 0
+}
+
+func (x *SingleQuestionStat) GetWrong() int32 {
+	if x != nil {
+		return x.Wrong
+	}
+	return 0
+}
+
+// stat to be sent
+type StatMsg struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Subelement string       `protobuf:"bytes,1,opt,name=Subelement,proto3" json:"Subelement,omitempty"`
+	Group      string       `protobuf:"bytes,2,opt,name=Group,proto3" json:"Group,omitempty"`
+	Sequence   int32        `protobuf:"varint,3,opt,name=Sequence,proto3" json:"Sequence,omitempty"`
+	Verdict    StatsVerdict `protobuf:"varint,4,opt,name=Verdict,proto3,enum=proto.StatsVerdict" json:"Verdict,omitempty"`
+}
+
+func (x *StatMsg) Reset() {
+	*x = StatMsg{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_ham_questions_pool_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StatMsg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StatMsg) ProtoMessage() {}
+
+func (x *StatMsg) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_ham_questions_pool_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StatMsg.ProtoReflect.Descriptor instead.
+func (*StatMsg) Descriptor() ([]byte, []int) {
+	return file_proto_ham_questions_pool_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *StatMsg) GetSubelement() string {
+	if x != nil {
+		return x.Subelement
+	}
+	return ""
+}
+
+func (x *StatMsg) GetGroup() string {
+	if x != nil {
+		return x.Group
+	}
+	return ""
+}
+
+func (x *StatMsg) GetSequence() int32 {
+	if x != nil {
+		return x.Sequence
+	}
+	return 0
+}
+
+func (x *StatMsg) GetVerdict() StatsVerdict {
+	if x != nil {
+		return x.Verdict
+	}
+	return StatsVerdict_STAT_CORRECT
+}
+
+type StatMsgs struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Msgs []*StatMsg `protobuf:"bytes,1,rep,name=Msgs,proto3" json:"Msgs,omitempty"`
+}
+
+func (x *StatMsgs) Reset() {
+	*x = StatMsgs{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_ham_questions_pool_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StatMsgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StatMsgs) ProtoMessage() {}
+
+func (x *StatMsgs) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_ham_questions_pool_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StatMsgs.ProtoReflect.Descriptor instead.
+func (*StatMsgs) Descriptor() ([]byte, []int) {
+	return file_proto_ham_questions_pool_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *StatMsgs) GetMsgs() []*StatMsg {
+	if x != nil {
+		return x.Msgs
+	}
+	return nil
+}
+
 var File_proto_ham_questions_pool_proto protoreflect.FileDescriptor
 
 var file_proto_ham_questions_pool_proto_rawDesc = []byte{
@@ -580,12 +859,44 @@ var file_proto_ham_questions_pool_proto_rawDesc = []byte{
 	0x65, 0x52, 0x06, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x22, 0x32, 0x0a, 0x0a, 0x47, 0x72, 0x6f,
 	0x75, 0x70, 0x54, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x54, 0x69, 0x74, 0x6c, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x54, 0x69, 0x74, 0x6c, 0x65, 0x42, 0x3a, 0x5a,
-	0x38, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6c, 0x75, 0x6c, 0x75,
-	0x6d, 0x65, 0x6c, 0x30, 0x6e, 0x2f, 0x61, 0x72, 0x72, 0x6c, 0x2d, 0x68, 0x61, 0x6d, 0x2d, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2d, 0x70, 0x6f, 0x6f, 0x6c, 0x2d, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x54, 0x69, 0x74, 0x6c, 0x65, 0x22, 0xa5, 0x01,
+	0x0a, 0x0c, 0x50, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x6c, 0x53, 0x74, 0x61, 0x74, 0x12, 0x3d,
+	0x0a, 0x08, 0x53, 0x74, 0x61, 0x74, 0x73, 0x4d, 0x61, 0x70, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x21, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61,
+	0x6c, 0x53, 0x74, 0x61, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x73, 0x4d, 0x61, 0x70, 0x45, 0x6e,
+	0x74, 0x72, 0x79, 0x52, 0x08, 0x53, 0x74, 0x61, 0x74, 0x73, 0x4d, 0x61, 0x70, 0x1a, 0x56, 0x0a,
+	0x0d, 0x53, 0x74, 0x61, 0x74, 0x73, 0x4d, 0x61, 0x70, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10,
+	0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79,
+	0x12, 0x2f, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x19, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x51, 0x75,
+	0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x5e, 0x0a, 0x12, 0x53, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x51,
+	0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x63,
+	0x6f, 0x72, 0x72, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x63, 0x6f,
+	0x72, 0x72, 0x65, 0x63, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x75, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x75, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x12,
+	0x14, 0x0a, 0x05, 0x77, 0x72, 0x6f, 0x6e, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05,
+	0x77, 0x72, 0x6f, 0x6e, 0x67, 0x22, 0x8a, 0x01, 0x0a, 0x07, 0x53, 0x74, 0x61, 0x74, 0x4d, 0x73,
+	0x67, 0x12, 0x1e, 0x0a, 0x0a, 0x53, 0x75, 0x62, 0x65, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x53, 0x75, 0x62, 0x65, 0x6c, 0x65, 0x6d, 0x65, 0x6e,
+	0x74, 0x12, 0x14, 0x0a, 0x05, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x05, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x12, 0x1a, 0x0a, 0x08, 0x53, 0x65, 0x71, 0x75, 0x65,
+	0x6e, 0x63, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x53, 0x65, 0x71, 0x75, 0x65,
+	0x6e, 0x63, 0x65, 0x12, 0x2d, 0x0a, 0x07, 0x56, 0x65, 0x72, 0x64, 0x69, 0x63, 0x74, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x0e, 0x32, 0x13, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x74, 0x61,
+	0x74, 0x73, 0x56, 0x65, 0x72, 0x64, 0x69, 0x63, 0x74, 0x52, 0x07, 0x56, 0x65, 0x72, 0x64, 0x69,
+	0x63, 0x74, 0x22, 0x2e, 0x0a, 0x08, 0x53, 0x74, 0x61, 0x74, 0x4d, 0x73, 0x67, 0x73, 0x12, 0x22,
+	0x0a, 0x04, 0x4d, 0x73, 0x67, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x4d, 0x73, 0x67, 0x52, 0x04, 0x4d, 0x73,
+	0x67, 0x73, 0x2a, 0x42, 0x0a, 0x0c, 0x53, 0x74, 0x61, 0x74, 0x73, 0x56, 0x65, 0x72, 0x64, 0x69,
+	0x63, 0x74, 0x12, 0x10, 0x0a, 0x0c, 0x53, 0x54, 0x41, 0x54, 0x5f, 0x43, 0x4f, 0x52, 0x52, 0x45,
+	0x43, 0x54, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x53, 0x54, 0x41, 0x54, 0x5f, 0x55, 0x4e, 0x4b,
+	0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x53, 0x54, 0x41, 0x54, 0x5f, 0x57,
+	0x52, 0x4f, 0x4e, 0x47, 0x10, 0x02, 0x42, 0x3a, 0x5a, 0x38, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6c, 0x75, 0x6c, 0x75, 0x6d, 0x65, 0x6c, 0x30, 0x6e, 0x2f, 0x61,
+	0x72, 0x72, 0x6c, 0x2d, 0x68, 0x61, 0x6d, 0x2d, 0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x2d, 0x70, 0x6f, 0x6f, 0x6c, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -600,33 +911,44 @@ func file_proto_ham_questions_pool_proto_rawDescGZIP() []byte {
 	return file_proto_ham_questions_pool_proto_rawDescData
 }
 
-var file_proto_ham_questions_pool_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_proto_ham_questions_pool_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_proto_ham_questions_pool_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_proto_ham_questions_pool_proto_goTypes = []interface{}{
-	(*Question)(nil),             // 0: proto.Question
-	(*QuestionList)(nil),         // 1: proto.QuestionList
-	(*CompleteQuestionPool)(nil), // 2: proto.CompleteQuestionPool
-	(*Group)(nil),                // 3: proto.Group
-	(*Subelement)(nil),           // 4: proto.Subelement
-	(*AllTitles)(nil),            // 5: proto.AllTitles
-	(*SubelementTitle)(nil),      // 6: proto.SubelementTitle
-	(*GroupTitle)(nil),           // 7: proto.GroupTitle
-	nil,                          // 8: proto.CompleteQuestionPool.SubelementMapEntry
-	nil,                          // 9: proto.Subelement.GroupMapEntry
+	(StatsVerdict)(0),            // 0: proto.StatsVerdict
+	(*Question)(nil),             // 1: proto.Question
+	(*QuestionList)(nil),         // 2: proto.QuestionList
+	(*CompleteQuestionPool)(nil), // 3: proto.CompleteQuestionPool
+	(*Group)(nil),                // 4: proto.Group
+	(*Subelement)(nil),           // 5: proto.Subelement
+	(*AllTitles)(nil),            // 6: proto.AllTitles
+	(*SubelementTitle)(nil),      // 7: proto.SubelementTitle
+	(*GroupTitle)(nil),           // 8: proto.GroupTitle
+	(*PersonalStat)(nil),         // 9: proto.PersonalStat
+	(*SingleQuestionStat)(nil),   // 10: proto.SingleQuestionStat
+	(*StatMsg)(nil),              // 11: proto.StatMsg
+	(*StatMsgs)(nil),             // 12: proto.StatMsgs
+	nil,                          // 13: proto.CompleteQuestionPool.SubelementMapEntry
+	nil,                          // 14: proto.Subelement.GroupMapEntry
+	nil,                          // 15: proto.PersonalStat.StatsMapEntry
 }
 var file_proto_ham_questions_pool_proto_depIdxs = []int32{
-	0, // 0: proto.QuestionList.Questions:type_name -> proto.Question
-	8, // 1: proto.CompleteQuestionPool.SubelementMap:type_name -> proto.CompleteQuestionPool.SubelementMapEntry
-	0, // 2: proto.Group.Questions:type_name -> proto.Question
-	9, // 3: proto.Subelement.GroupMap:type_name -> proto.Subelement.GroupMapEntry
-	6, // 4: proto.AllTitles.Subelements:type_name -> proto.SubelementTitle
-	7, // 5: proto.SubelementTitle.Groups:type_name -> proto.GroupTitle
-	4, // 6: proto.CompleteQuestionPool.SubelementMapEntry.value:type_name -> proto.Subelement
-	3, // 7: proto.Subelement.GroupMapEntry.value:type_name -> proto.Group
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	1,  // 0: proto.QuestionList.Questions:type_name -> proto.Question
+	13, // 1: proto.CompleteQuestionPool.SubelementMap:type_name -> proto.CompleteQuestionPool.SubelementMapEntry
+	1,  // 2: proto.Group.Questions:type_name -> proto.Question
+	14, // 3: proto.Subelement.GroupMap:type_name -> proto.Subelement.GroupMapEntry
+	7,  // 4: proto.AllTitles.Subelements:type_name -> proto.SubelementTitle
+	8,  // 5: proto.SubelementTitle.Groups:type_name -> proto.GroupTitle
+	15, // 6: proto.PersonalStat.StatsMap:type_name -> proto.PersonalStat.StatsMapEntry
+	0,  // 7: proto.StatMsg.Verdict:type_name -> proto.StatsVerdict
+	11, // 8: proto.StatMsgs.Msgs:type_name -> proto.StatMsg
+	5,  // 9: proto.CompleteQuestionPool.SubelementMapEntry.value:type_name -> proto.Subelement
+	4,  // 10: proto.Subelement.GroupMapEntry.value:type_name -> proto.Group
+	10, // 11: proto.PersonalStat.StatsMapEntry.value:type_name -> proto.SingleQuestionStat
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_proto_ham_questions_pool_proto_init() }
@@ -731,19 +1053,68 @@ func file_proto_ham_questions_pool_proto_init() {
 				return nil
 			}
 		}
+		file_proto_ham_questions_pool_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PersonalStat); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_ham_questions_pool_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SingleQuestionStat); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_ham_questions_pool_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StatMsg); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_ham_questions_pool_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StatMsgs); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_ham_questions_pool_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   10,
+			NumEnums:      1,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_proto_ham_questions_pool_proto_goTypes,
 		DependencyIndexes: file_proto_ham_questions_pool_proto_depIdxs,
+		EnumInfos:         file_proto_ham_questions_pool_proto_enumTypes,
 		MessageInfos:      file_proto_ham_questions_pool_proto_msgTypes,
 	}.Build()
 	File_proto_ham_questions_pool_proto = out.File
