@@ -11,8 +11,16 @@ import (
 	"github.com/lulumel0n/arrl-ham-questions-pool-proto/proto"
 )
 
+type Level byte
+
+const (
+	General Level = 'G'
+	Tech    Level = 'T'
+	Extra   Level = 'E'
+)
+
 // NewHamQuestionsAndTitles returns a struct with all questions in one proto and the titles in another
-func NewHamQuestionsAndTitles(cached string, rawQuestions string) (*proto.CompleteQuestionPool, *proto.AllTitles, error) {
+func NewHamQuestionsAndTitles(cached string, rawQuestionsFilename string, level Level) (*proto.CompleteQuestionPool, *proto.AllTitles, error) {
 	qpb := &proto.CompleteQuestionPool{}
 	titles := &proto.AllTitles{}
 
@@ -20,12 +28,12 @@ func NewHamQuestionsAndTitles(cached string, rawQuestions string) (*proto.Comple
 	cachedpb, err := ioutil.ReadFile(cached)
 
 	if err != nil {
-		data, err := ioutil.ReadFile(rawQuestions)
+		data, err := ioutil.ReadFile(rawQuestionsFilename)
 		if err != nil {
 			fmt.Println(err)
 			return nil, nil, err
 		}
-		qpb, titles = CreatePool(string(data))
+		qpb, titles = CreatePool(string(data), level)
 	} else {
 		if err = pb.Unmarshal(cachedpb, qpb); err != nil {
 			fmt.Println("Fail to unmarshal cached proto")
@@ -37,17 +45,17 @@ func NewHamQuestionsAndTitles(cached string, rawQuestions string) (*proto.Comple
 }
 
 // CreatePool creates a Ham quesitons pool from a formated txt questions pool, and a titles only proto
-func CreatePool(sourcePool string) (*proto.CompleteQuestionPool, *proto.AllTitles) {
+func CreatePool(sourcePool string, level Level) (*proto.CompleteQuestionPool, *proto.AllTitles) {
 	lines := strings.Split(sourcePool, "\n")
 	qpool := &proto.CompleteQuestionPool{}
 	qpool.SubelementMap = make(map[string]*proto.Subelement)
 
 	alltitles := &proto.AllTitles{}
 
-	startr, _ := regexp.Compile("G[0-9][A-Z][0-9][0-9]\\s\\([A-D]\\)")
+	startr, _ := regexp.Compile(string(level) + "[0-9][A-Z][0-9][0-9]\\s\\([A-D]\\)")
 	endr, _ := regexp.Compile("~~")
-	subelementr, _ := regexp.Compile("SUBELEMENT G.*")
-	groupr, _ := regexp.Compile("G[0-9][A-Z] –.*")
+	subelementr, _ := regexp.Compile("SUBELEMENT " + string(level) + ".*")
+	groupr, _ := regexp.Compile(string(level) + "[0-9][A-Z] .*")
 	inQ := false
 
 	var subelement *proto.Subelement
@@ -74,7 +82,7 @@ func CreatePool(sourcePool string) (*proto.CompleteQuestionPool, *proto.AllTitle
 			if matchSubelement {
 				subelement = &proto.Subelement{}
 				subelement.Id = s[11:13]
-				subelement.Title = s[18 : len(s)-32]
+				subelement.Title = s[16:]
 				subelement.GroupMap = make(map[string]*proto.Group)
 
 				subelementTitle = &proto.SubelementTitle{}
@@ -86,7 +94,7 @@ func CreatePool(sourcePool string) (*proto.CompleteQuestionPool, *proto.AllTitle
 			} else if matchGroup {
 				group = &proto.Group{}
 				group.Id = string(s[2])
-				group.Title = s[8:]
+				group.Title = s[6:]
 
 				subelement.GroupMap[group.Id] = group
 
@@ -110,7 +118,7 @@ func CreatePool(sourcePool string) (*proto.CompleteQuestionPool, *proto.AllTitle
 			}
 			group.Questions = append(group.Questions, q)
 
-			// flush question buffer
+			// flush question
 			question = ""
 			inQ = false
 		}
