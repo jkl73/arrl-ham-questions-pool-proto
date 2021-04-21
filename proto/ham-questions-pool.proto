@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option go_package = "github.com/lulumel0n/arrl-ham-questions-pool-proto/proto";
+option go_package = "github.com/jkl73/arrl-ham-questions-pool-proto/proto";
 
 message Question {
     string Subelement = 1; // G0, G1 ,G2

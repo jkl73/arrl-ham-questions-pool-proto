@@ -8,7 +8,7 @@ import (
 
 	pb "google.golang.org/protobuf/proto"
 
-	"github.com/lulumel0n/arrl-ham-questions-pool-proto/proto"
+	"github.com/jkl73/arrl-ham-questions-pool-proto/proto"
 )
 
 type Level byte

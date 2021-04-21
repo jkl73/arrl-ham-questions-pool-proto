@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulumel0n/arrl-ham-questions-pool-proto/proto"
+	"github.com/jkl73/arrl-ham-questions-pool-proto/proto"
 )
 
 const generalFigG7_1 = "2019-2023_general-G7-1.png"

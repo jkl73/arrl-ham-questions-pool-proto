@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	hamquestions "github.com/lulumel0n/arrl-ham-questions-pool-proto/ham-questions"
+	hamquestions "github.com/jkl73/arrl-ham-questions-pool-proto/ham-questions"
 )
 
 const outputDir = "../out/"
