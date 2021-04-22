@@ -9,6 +9,19 @@ import (
 )
 
 const generalFigG7_1 = "2019-2023_general-G7-1.png"
+const techFigT1 = "2018-2022_technician-T-1.png"
+const techFigT2 = "2018-2022_technician-T-2.png"
+const techFigT3 = "2018-2022_technician-T-3.png"
+const extraFigE5_1 = "2020_Extra-E5-1.png"
+const extraFigE6_1 = "2020_Extra-E6-1.png"
+const extraFigE6_2 = "2020_Extra-E6-2.png"
+const extraFigE6_3 = "2020_Extra-E6-3.png"
+const extraFigE7_1 = "2020_Extra-E7-1.png"
+const extraFigE7_2 = "2020_Extra-E7-2.png"
+const extraFigE7_3 = "2020_Extra-E7-3.png"
+const extraFigE9_1 = "2020_Extra-E9-1.png"
+const extraFigE9_2 = "2020_Extra-E9-2.png"
+const extraFigE9_3 = "2020_Extra-E9-3.png"
 
 // parse a single question
 //
@@ -52,10 +65,33 @@ func qparse(q string) *proto.Question {
 	}
 	stem = strings.TrimSpace(stem)
 
-	// figure handle (only 1 figure in the General exam)
+	// figures handle (only 1 figure in the General exam)
 	// Figure G7-1
-	fig := ""
+	fig := checkContaintedFigure()
 	containFigure, err := regexp.MatchString(".*[Ff]igure [Gg]7-1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		fig = generalFigG7_1
+	}
+
+	containFigure, err := regexp.MatchString(".*[Ff]igure T1*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		fig = generalFigG7_1
+	}
+	containFigure, err := regexp.MatchString(".*[Ff]igure T1*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		fig = generalFigG7_1
+	}
+
+	containFigure, err := regexp.MatchString(".*[Ff]igure T1*", stem)
 	if err != nil {
 		panic(err)
 	}
@@ -99,4 +135,114 @@ func qparse(q string) *proto.Question {
 	}
 
 	return &res
+}
+
+func checkContaintedFigure(stem string) string {
+	containFigure, err := regexp.MatchString(".*[Ff]igure [Gg]7-1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return generalFigG7_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure T1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return generalFigG7_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure T2.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return generalFigG7_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure T3.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return generalFigG7_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure T3.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return generalFigG7_1
+	}
+
+	containFigure, err = regexp.MatchString(".*[Ff]igure E5-1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE5_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E6-1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE6_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E6-2.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE6_2
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E6-3.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE6_3
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E7-1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE7_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E7-2.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE7_2
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E7-3.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE7_3
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E9-1.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE9_1
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E9-2.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE9_2
+	}
+	containFigure, err = regexp.MatchString(".*[Ff]igure E9-3.*", stem)
+	if err != nil {
+		panic(err)
+	}
+	if containFigure {
+		return extraFigE9_3
+	}
+
 }
