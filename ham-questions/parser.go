@@ -64,40 +64,7 @@ func qparse(q string) *proto.Question {
 		}
 	}
 	stem = strings.TrimSpace(stem)
-
-	// figures handle (only 1 figure in the General exam)
-	// Figure G7-1
-	fig := checkContaintedFigure()
-	containFigure, err := regexp.MatchString(".*[Ff]igure [Gg]7-1.*", stem)
-	if err != nil {
-		panic(err)
-	}
-	if containFigure {
-		fig = generalFigG7_1
-	}
-
-	containFigure, err := regexp.MatchString(".*[Ff]igure T1*", stem)
-	if err != nil {
-		panic(err)
-	}
-	if containFigure {
-		fig = generalFigG7_1
-	}
-	containFigure, err := regexp.MatchString(".*[Ff]igure T1*", stem)
-	if err != nil {
-		panic(err)
-	}
-	if containFigure {
-		fig = generalFigG7_1
-	}
-
-	containFigure, err := regexp.MatchString(".*[Ff]igure T1*", stem)
-	if err != nil {
-		panic(err)
-	}
-	if containFigure {
-		fig = generalFigG7_1
-	}
+	fig := checkContaintedFigure(stem)
 
 	// answers
 	key := ""
@@ -244,5 +211,5 @@ func checkContaintedFigure(stem string) string {
 	if containFigure {
 		return extraFigE9_3
 	}
-
+	return ""
 }
