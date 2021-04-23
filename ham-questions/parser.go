@@ -117,28 +117,21 @@ func checkContaintedFigure(stem string) string {
 		panic(err)
 	}
 	if containFigure {
-		return generalFigG7_1
+		return techFigT1
 	}
 	containFigure, err = regexp.MatchString(".*[Ff]igure T2.*", stem)
 	if err != nil {
 		panic(err)
 	}
 	if containFigure {
-		return generalFigG7_1
+		return techFigT2
 	}
 	containFigure, err = regexp.MatchString(".*[Ff]igure T3.*", stem)
 	if err != nil {
 		panic(err)
 	}
 	if containFigure {
-		return generalFigG7_1
-	}
-	containFigure, err = regexp.MatchString(".*[Ff]igure T3.*", stem)
-	if err != nil {
-		panic(err)
-	}
-	if containFigure {
-		return generalFigG7_1
+		return techFigT3
 	}
 
 	containFigure, err = regexp.MatchString(".*[Ff]igure E5-1.*", stem)
