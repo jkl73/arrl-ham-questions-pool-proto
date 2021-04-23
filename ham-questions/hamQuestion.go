@@ -86,7 +86,7 @@ func CreatePool(sourcePool string, level Level) (*proto.CompleteQuestionPool, *p
 				subelement.GroupMap = make(map[string]*proto.Group)
 
 				subelementTitle = &proto.SubelementTitle{}
-				subelementTitle.Id = s[11:13]
+				subelementTitle.Id = subelement.Id
 				subelementTitle.Title = subelement.Title
 				alltitles.Subelements = append(alltitles.Subelements, subelementTitle)
 

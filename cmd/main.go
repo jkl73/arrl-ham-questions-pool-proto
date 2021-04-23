@@ -14,29 +14,29 @@ const rawQuestionsExtraFile = "../raw-questions/2020-2024_extra.txt"
 
 func main() {
 
-	generalqpb, gentitles, err := hamquestions.NewHamQuestionsAndTitles("", rawQuestionsGeneralFile, hamquestions.General)
+	_, _, err := hamquestions.NewHamQuestionsAndTitles("", rawQuestionsGeneralFile, hamquestions.General)
 	if err != nil {
 		fmt.Println("General")
 		panic(err)
 	}
-	fmt.Println(generalqpb)
-	fmt.Println(gentitles)
+	// fmt.Println(generalqpb)
+	// fmt.Println(gentitles)
 
-	techqpb, techtitles, err := hamquestions.NewHamQuestionsAndTitles("", rawQuestionsTechnicianFile, hamquestions.Tech)
+	_, _, err = hamquestions.NewHamQuestionsAndTitles("", rawQuestionsTechnicianFile, hamquestions.Tech)
 	if err != nil {
 		fmt.Println("Tech")
 		panic(err)
 	}
-	fmt.Println(techqpb)
-	fmt.Println(techtitles)
+	// fmt.Println(techqpb)
+	// fmt.Println(techtitles)
 
-	extraqpb, extratitles, err := hamquestions.NewHamQuestionsAndTitles("", rawQuestionsExtraFile, hamquestions.Extra)
+	_, _, err = hamquestions.NewHamQuestionsAndTitles("", rawQuestionsExtraFile, hamquestions.Extra)
 	if err != nil {
 		fmt.Println("EXTRA")
 		panic(err)
 	}
-	fmt.Println(extraqpb)
-	fmt.Println(extratitles)
+	// fmt.Println(extraqpb)
+	// fmt.Println(extratitles)
 
 	// out, err := pb.Marshal(qpb.SubelementMap)
 	// if err != nil {
